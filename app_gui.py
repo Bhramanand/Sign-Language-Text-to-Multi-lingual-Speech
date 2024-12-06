@@ -10,7 +10,7 @@ from gtts import gTTS
 import os
 import pyttsx3
 
-# Initialize OpenCV video capture and models
+
 cap = cv2.VideoCapture(0)
 detector = HandDetector(maxHands=1)
 classifier = Classifier(
@@ -21,7 +21,7 @@ offset = 20
 imgSize = 300
 labels = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"]
 
-# Initialize sentence variable, TTS engine, and Translator
+
 sentence = ""
 detected_letter = ""
 engine = pyttsx3.init()
@@ -38,14 +38,13 @@ languages = {
     "Hindi": "hi",
 }
 
-# GUI setup
+
 window = tk.Tk()
 window.title("Sign Language to Text")
 window.geometry("800x600")
 
-# Language selection after window initialization
-selected_language = tk.StringVar(value="English")  # Default to English
 
+selected_language = tk.StringVar(value="English") 
 video_label = tk.Label(window)
 video_label.pack()
 
@@ -55,46 +54,46 @@ letter_label.pack(pady=10)
 sentence_label = tk.Label(window, text="Sentence: ", font=("Helvetica", 20))
 sentence_label.pack(pady=10)
 
-# Function to append detected letter to sentence
+
 def add_to_sentence():
     global sentence
     sentence += detected_letter
     sentence_label.config(text="Sentence: " + sentence)
 
-# Function to add space to the sentence
+
 def add_space():
     global sentence
     sentence += " "
     sentence_label.config(text="Sentence: " + sentence)
 
-# Function to clear the sentence
+
 def clear_sentence():
     global sentence
     sentence = ""
     sentence_label.config(text="Sentence: ")
 
-# Function to delete the last letter
+
 def delete_last_letter():
     global sentence
     sentence = sentence[:-1]
     sentence_label.config(text="Sentence: " + sentence)
 
-# Function to translate and convert sentence to speech in selected language
+
 def speak_sentence():
-    target_lang = languages.get(selected_language.get(), "en")  # Default to English if language not found
+    target_lang = languages.get(selected_language.get(), "en")
     try:
         translated = translator.translate(sentence, dest=target_lang)
         tts = gTTS(text=translated.text, lang=target_lang)
         tts.save("translated_sentence.mp3")
-        os.system("start translated_sentence.mp3")  # This will play the audio file
+        os.system("start translated_sentence.mp3")  
     except Exception as e:
         print(f"Error during translation or TTS: {e}")
 
-# Frame for buttons
+
 button_frame = tk.Frame(window)
 button_frame.pack(pady=10)
 
-# Buttons for various actions
+
 add_button = tk.Button(button_frame, text="Add Letter", command=add_to_sentence, font=("Helvetica", 14), height=2, width=20)
 add_button.grid(row=0, column=0, padx=5)
 
@@ -110,11 +109,11 @@ delete_button.grid(row=0, column=3, padx=5)
 speak_button = tk.Button(button_frame, text="Speak Sentence", command=speak_sentence, font=("Helvetica", 14), height=2, width=20)
 speak_button.grid(row=0, column=4, padx=5)
 
-# Language selection dropdown
+
 language_label = tk.Label(window, text="Select Language: ", font=("Helvetica", 16))
 language_label.pack(pady=10)
 
-# Dropdown menu for language selection
+
 language_menu = tk.OptionMenu(window, selected_language, *languages.keys())
 language_menu.config(font=("Helvetica", 14), width=15)
 language_menu.pack(pady=10)
@@ -125,7 +124,7 @@ hand_present_last_frame = False
 
 import time
 
-# Initialize timer variables
+
 last_detected_time = None
 
 def update_frame():
@@ -144,7 +143,7 @@ def update_frame():
 
         hand_present_last_frame = True
 
-        # Process the hand data
+
         hand = hands[0]
         x, y, w, h = hand['bbox']
 
@@ -175,12 +174,12 @@ def update_frame():
             if last_detected_time is None:
                 last_detected_time = time.time()
 
-            # If 5 seconds have passed since last_detected_time, add the letter
+         
             if time.time() - last_detected_time >= 5:
                 sentence += detected_letter
                 sentence_label.config(text="Sentence: " + sentence)
-                last_detected_time = None  # Reset the timer after adding the letter
-                detected_letter = ""  # Clear detected letter to avoid immediate re-adding
+                last_detected_time = None 
+                detected_letter = ""  
 
             cv2.rectangle(imgOutput, (x - offset, y - offset - 50), (x - offset + 90, y - offset - 50 + 50),
                           (255, 0, 255), cv2.FILLED)
